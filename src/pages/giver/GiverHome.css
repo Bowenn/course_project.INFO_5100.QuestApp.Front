@@ -1,0 +1,71 @@
+.giver-page h1 {
+  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+}
+
+.giver-create-btn {
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.giver-create-btn:hover {
+  background: #2d2d44;
+}
+
+.giver-form {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.giver-form input,
+.giver-form textarea {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.giver-form button {
+  align-self: flex-start;
+  padding: 0.5rem 1rem;
+  background: #047857;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.giver-task-wrapper {
+  position: relative;
+}
+
+.giver-action-btn {
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border: none;
+}
+
+.giver-edit {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.giver-cancel {
+  background: #b91c1c;
+  color: #fff;
+}

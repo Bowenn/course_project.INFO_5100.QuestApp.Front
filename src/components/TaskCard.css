@@ -1,0 +1,85 @@
+.task-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.task-card-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.task-card-desc {
+  margin: 0 0 0.75rem;
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.task-card-meta {
+  margin-bottom: 0.75rem;
+}
+
+.task-status {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.task-status-open {
+  background: #e6fffa;
+  color: #0d9488;
+}
+
+.task-status-picked {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.task-status-done {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.task-status-cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.task-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.task-btn {
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+
+.task-btn-primary {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.task-btn-primary:hover {
+  background: #2d2d44;
+}
+
+.task-btn-success {
+  background: #047857;
+  color: #fff;
+}
+
+.task-btn-success:hover {
+  background: #059669;
+}
