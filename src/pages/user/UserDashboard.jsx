@@ -16,7 +16,7 @@ const TABS = {
 const TAB_LABELS = {
   [TABS.BROWSE]: 'Browse Tasks',
   [TABS.MY_TASKS]: 'My Tasks',
-  [TABS.ASSIGNMENTS]: 'Assignments',
+  [TABS.ASSIGNMENTS]: 'My Work',
   [TABS.CREATE]: 'Create Task',
   [TABS.PROFILE]: 'Profile',
 }
@@ -121,6 +121,17 @@ export function UserDashboard() {
       loadMyTasks()
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to cancel task.')
+    }
+  }
+
+  const handleOwnerDelete = async (task) => {
+    if (!window.confirm(`Permanently delete "${task.title}"? This cannot be undone.`)) return
+    setError('')
+    try {
+      await tasksAPI.delete(task.id)
+      setMyTasks((prev) => prev.filter((t) => t.id !== task.id))
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to delete task.')
     }
   }
 
@@ -299,6 +310,7 @@ export function UserDashboard() {
                     onEdit={handleEditClick}
                     onPublish={handlePublish}
                     onCancel={handleCancel}
+                    onDelete={task.status === 'DRAFT' || task.status === 'CANCELLED' ? handleOwnerDelete : undefined}
                     currentUserId={user?.id}
                   />
                 ))}
@@ -311,87 +323,61 @@ export function UserDashboard() {
         </div>
       )}
 
-      {/* ASSIGNMENTS TAB */}
+      {/* MY WORK TAB */}
       {tab === TABS.ASSIGNMENTS && (
         <div>
+          <p className="page-desc">Tasks you accepted from others. Update your progress here.</p>
           {loading ? (
             <p className="dashboard-loading">Loading…</p>
           ) : assignments ? (
             <>
-              <section>
-                <h2>Tasks You Accepted</h2>
-                <p className="page-desc">Update progress on tasks you are working on.</p>
-                <div className="task-grid">
-                  {assignments.asTaker.map((a) => (
-                    <div key={a.id} className="assignment-card">
-                      <h3 className="task-card-title">{a.task.title}</h3>
-                      <p className="task-card-desc">{a.task.description}</p>
-                      <div className="task-card-meta">
-                        <span className={`task-status task-status-${a.status?.toLowerCase()}`}>
-                          {STATUS_LABELS[a.status] || a.status}
-                        </span>
-                        <span className="task-owner">from {a.task.giver?.username}</span>
-                      </div>
-                      <div className="task-card-actions">
-                        {a.status === 'ASSIGNED' && (
-                          <>
-                            <button
-                              type="button"
-                              className="task-btn task-btn-primary"
-                              onClick={() => handleAssignmentUpdate(a.id, 'IN_PROGRESS')}
-                            >
-                              Start Work
-                            </button>
-                            <button
-                              type="button"
-                              className="task-btn task-btn-danger"
-                              onClick={() => handleAssignmentUpdate(a.id, 'DECLINED')}
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        )}
-                        {a.status === 'IN_PROGRESS' && (
+              <div className="task-grid">
+                {assignments.asTaker.map((a) => (
+                  <div key={a.id} className="assignment-card">
+                    <h3 className="task-card-title">{a.task.title}</h3>
+                    <p className="task-card-desc">{a.task.description}</p>
+                    <div className="task-card-meta">
+                      <span className={`task-status task-status-${a.status?.toLowerCase()}`}>
+                        {STATUS_LABELS[a.status] || a.status}
+                      </span>
+                      <span className="task-owner">from {a.task.giver?.username}</span>
+                    </div>
+                    <div className="task-card-actions">
+                      {a.status === 'ASSIGNED' && (
+                        <>
                           <button
                             type="button"
-                            className="task-btn task-btn-success"
-                            onClick={() => handleAssignmentUpdate(a.id, 'COMPLETED')}
+                            className="task-btn task-btn-primary"
+                            onClick={() => handleAssignmentUpdate(a.id, 'IN_PROGRESS')}
                           >
-                            Mark Complete
+                            Start Work
                           </button>
-                        )}
-                      </div>
-                      {a.note && <p className="assignment-note">Note: {a.note}</p>}
+                          <button
+                            type="button"
+                            className="task-btn task-btn-danger"
+                            onClick={() => handleAssignmentUpdate(a.id, 'DECLINED')}
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      )}
+                      {a.status === 'IN_PROGRESS' && (
+                        <button
+                          type="button"
+                          className="task-btn task-btn-success"
+                          onClick={() => handleAssignmentUpdate(a.id, 'COMPLETED')}
+                        >
+                          Mark Complete
+                        </button>
+                      )}
                     </div>
-                  ))}
-                </div>
-                {assignments.asTaker.length === 0 && (
-                  <p className="empty-state">You have not accepted any tasks yet.</p>
-                )}
-              </section>
-
-              <section style={{ marginTop: '2.5rem' }}>
-                <h2>Tasks You Created (Accepted by Others)</h2>
-                <p className="page-desc">Track progress on tasks others accepted from you.</p>
-                <div className="task-grid">
-                  {assignments.asOwner.map((a) => (
-                    <div key={a.id} className="assignment-card">
-                      <h3 className="task-card-title">{a.task.title}</h3>
-                      <p className="task-card-desc">{a.task.description}</p>
-                      <div className="task-card-meta">
-                        <span className={`task-status task-status-${a.status?.toLowerCase()}`}>
-                          {STATUS_LABELS[a.status] || a.status}
-                        </span>
-                        <span className="task-owner">accepted by {a.taker?.username}</span>
-                      </div>
-                      {a.note && <p className="assignment-note">Note: {a.note}</p>}
-                    </div>
-                  ))}
-                </div>
-                {assignments.asOwner.length === 0 && (
-                  <p className="empty-state">None of your tasks have been accepted yet.</p>
-                )}
-              </section>
+                    {a.note && <p className="assignment-note">Note: {a.note}</p>}
+                  </div>
+                ))}
+              </div>
+              {assignments.asTaker.length === 0 && (
+                <p className="empty-state">You have not accepted any tasks yet.</p>
+              )}
             </>
           ) : null}
         </div>

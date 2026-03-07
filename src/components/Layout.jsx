@@ -20,7 +20,6 @@ export function Layout() {
               <NavLink to={ROUTES.ADMIN}>Admin</NavLink>
             )}
             {!user && <NavLink to={ROUTES.LOGIN}>Login</NavLink>}
-            {!user && <NavLink to={ROUTES.REGISTER}>Register</NavLink>}
             {user && (
               <span className="layout-user">
                 {user.username} ({user.role})

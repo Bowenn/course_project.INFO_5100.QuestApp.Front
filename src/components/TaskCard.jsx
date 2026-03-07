@@ -7,12 +7,13 @@ import './TaskCard.css'
  */
 export function TaskCard({ task, onAccept, onPublish, onCancel, onDelete, onEdit, currentUserId, showActions = true }) {
   const isOwner = task.giver?.id === currentUserId
-  const canPublish = showActions && isOwner && task.status === 'DRAFT'
-  const canEdit = showActions && isOwner && task.status === 'DRAFT' && !!onEdit
+  const canPublish = showActions && isOwner && (task.status === 'DRAFT' || task.status === 'CANCELLED')
+  const canEdit = showActions && isOwner && (task.status === 'DRAFT' || task.status === 'CANCELLED') && !!onEdit
   const canAccept = showActions && !isOwner && task.status === 'PUBLISHED'
-  const canCancel = showActions && isOwner && task.status !== 'COMPLETED' && task.status !== 'CANCELLED'
-    && task.status !== 'IN_PROGRESS'
-  const canDelete = showActions && !!onDelete
+  const canCancel = showActions && isOwner && task.status !== 'DRAFT' && task.status !== 'COMPLETED'
+    && task.status !== 'CANCELLED' && task.status !== 'IN_PROGRESS'
+  const canDelete = showActions && isOwner && !!onDelete
+    && (task.status === 'DRAFT' || task.status === 'CANCELLED')
 
   return (
     <article className="task-card">

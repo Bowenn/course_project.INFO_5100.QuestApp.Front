@@ -72,9 +72,6 @@ export function LoginPage() {
         </form>
 
         <p className="login-note">
-          Demo accounts: alice@test.com / password &nbsp;|&nbsp; admin@questapp.com / admin123
-        </p>
-        <p className="login-note">
           New here? <Link to={ROUTES.REGISTER}>Create an account</Link>
         </p>
       </div>
