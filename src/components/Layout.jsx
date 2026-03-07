@@ -15,18 +15,17 @@ export function Layout() {
             Quest App
           </NavLink>
           <div className="layout-links">
-            <NavLink to={ROUTES.TAKER} end>
-              Browse Tasks
-            </NavLink>
-            <NavLink to={ROUTES.TAKER_PICKED}>My Picked</NavLink>
-            <NavLink to={ROUTES.TAKER_FINISHED}>Finished</NavLink>
-            {user?.role === ROLES.GIVER && (
-              <NavLink to={ROUTES.GIVER}>My Tasks</NavLink>
-            )}
+            {user && <NavLink to={ROUTES.DASHBOARD}>Dashboard</NavLink>}
             {user?.role === ROLES.ADMIN && (
               <NavLink to={ROUTES.ADMIN}>Admin</NavLink>
             )}
-            {!user && <NavLink to={ROUTES.LOGIN}>Login (Giver/Admin)</NavLink>}
+            {!user && <NavLink to={ROUTES.LOGIN}>Login</NavLink>}
+            {!user && <NavLink to={ROUTES.REGISTER}>Register</NavLink>}
+            {user && (
+              <span className="layout-user">
+                {user.username} ({user.role})
+              </span>
+            )}
             {user && (
               <button type="button" onClick={logout} className="layout-logout">
                 Logout

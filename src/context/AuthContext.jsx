@@ -1,30 +1,53 @@
-import { createContext, useContext, useState, useCallback } from 'react'
-import { ROLES } from '../constants/roles'
+import { createContext, useContext, useState, useCallback, useEffect } from 'react'
+import { authAPI, usersAPI } from '../services/api'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null) // { id, email, role }
+  // user: { id, username, email, role, createdAt } or null
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  const login = useCallback((email, password, role) => {
-    // TODO: Replace with real API call
-    const id = role === ROLES.GIVER ? 'g1' : role === ROLES.ADMIN ? 'admin1' : '1'
-    setUser({
-      id,
-      email,
-      role,
-    })
+  // Restore session on mount if token exists
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setLoading(false)
+      return
+    }
+    usersAPI.me()
+      .then((res) => setUser(res.data))
+      .catch(() => localStorage.removeItem('token'))
+      .finally(() => setLoading(false))
+  }, [])
+
+  const login = useCallback(async (email, password) => {
+    const res = await authAPI.login(email, password)
+    localStorage.setItem('token', res.data.token)
+    // Fetch full profile (id, username, role, etc.)
+    const meRes = await usersAPI.me()
+    setUser(meRes.data)
+    return meRes.data
   }, [])
 
   const logout = useCallback(() => {
+    localStorage.removeItem('token')
     setUser(null)
+  }, [])
+
+  // Call after a successful profile update to store the new token and user
+  const updateUser = useCallback((newToken, newUserData) => {
+    localStorage.setItem('token', newToken)
+    setUser(newUserData)
   }, [])
 
   const value = {
     user,
+    loading,
     isAuthenticated: !!user,
     login,
     logout,
+    updateUser,
     hasRole: (role) => user?.role === role,
   }
 
@@ -33,8 +56,6 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider')
-  }
+  if (!context) throw new Error('useAuth must be used within AuthProvider')
   return context
 }

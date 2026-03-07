@@ -1,29 +1,56 @@
-import { TASK_STATUS } from '../data/mockTasks'
+import { STATUS_LABELS } from '../constants/statuses'
 import './TaskCard.css'
 
-export function TaskCard({ task, onPick, onMarkDone, showActions = true }) {
-  const canPick = showActions && task.status === TASK_STATUS.OPEN
-  const canMarkDone = showActions && task.status === TASK_STATUS.PICKED
+/**
+ * task shape: { id, title, description, status, giver: { id, username } }
+ * currentUserId: the logged-in user's id
+ */
+export function TaskCard({ task, onAccept, onPublish, onCancel, onDelete, onEdit, currentUserId, showActions = true }) {
+  const isOwner = task.giver?.id === currentUserId
+  const canPublish = showActions && isOwner && task.status === 'DRAFT'
+  const canEdit = showActions && isOwner && task.status === 'DRAFT' && !!onEdit
+  const canAccept = showActions && !isOwner && task.status === 'PUBLISHED'
+  const canCancel = showActions && isOwner && task.status !== 'COMPLETED' && task.status !== 'CANCELLED'
+    && task.status !== 'IN_PROGRESS'
+  const canDelete = showActions && !!onDelete
 
   return (
     <article className="task-card">
       <h3 className="task-card-title">{task.title}</h3>
       <p className="task-card-desc">{task.description}</p>
       <div className="task-card-meta">
-        <span className={`task-status task-status-${task.status}`}>
-          {task.status}
+        <span className={`task-status task-status-${task.status?.toLowerCase()}`}>
+          {STATUS_LABELS[task.status] || task.status}
         </span>
+        {task.giver?.username && (
+          <span className="task-owner">by {task.giver.username}</span>
+        )}
       </div>
       {showActions && (
         <div className="task-card-actions">
-          {canPick && (
-            <button type="button" onClick={() => onPick?.(task)} className="task-btn task-btn-primary">
-              Pick Task
+          {canEdit && (
+            <button type="button" onClick={() => onEdit?.(task)} className="task-btn task-btn-secondary">
+              Edit
             </button>
           )}
-          {canMarkDone && (
-            <button type="button" onClick={() => onMarkDone?.(task)} className="task-btn task-btn-success">
-              Mark Done
+          {canPublish && (
+            <button type="button" onClick={() => onPublish?.(task)} className="task-btn task-btn-primary">
+              Publish
+            </button>
+          )}
+          {canAccept && (
+            <button type="button" onClick={() => onAccept?.(task)} className="task-btn task-btn-primary">
+              Accept Task
+            </button>
+          )}
+          {canCancel && (
+            <button type="button" onClick={() => onCancel?.(task)} className="task-btn task-btn-danger">
+              Cancel
+            </button>
+          )}
+          {canDelete && (
+            <button type="button" onClick={() => onDelete?.(task)} className="task-btn task-btn-danger">
+              Delete
             </button>
           )}
         </div>

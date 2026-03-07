@@ -1,27 +1,36 @@
 import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { ROUTES } from '../constants/routes'
+import { ROLES } from '../constants/roles'
 import './LandingPage.css'
 
 export function LandingPage() {
+  const { user } = useAuth()
+
   return (
     <div className="landing">
       <h1>Quest App</h1>
-      <p className="landing-tagline">Find tasks. Complete them. Get things done.</p>
+      <p className="landing-tagline">Create tasks. Accept them. Get things done.</p>
 
       <div className="landing-roles">
-        <Link to={ROUTES.TAKER} className="landing-card">
-          <h2>Taker</h2>
-          <p>Browse tasks, pick them up, and mark them done. No login required to browse.</p>
+        <Link to={user ? ROUTES.DASHBOARD : ROUTES.LOGIN} className="landing-card">
+          <h2>User</h2>
+          <p>Create tasks, browse available tasks, and accept them. Login required.</p>
         </Link>
-        <Link to={ROUTES.GIVER} className="landing-card">
-          <h2>Giver</h2>
-          <p>Create, modify, and cancel tasks. Login required.</p>
-        </Link>
-        <Link to={ROUTES.ADMIN} className="landing-card">
+        <Link
+          to={user?.role === ROLES.ADMIN ? ROUTES.ADMIN : ROUTES.LOGIN}
+          className="landing-card"
+        >
           <h2>Admin</h2>
-          <p>Manage the platform. Login required.</p>
+          <p>View all tasks and users, delete tasks. Admin login required.</p>
         </Link>
       </div>
+
+      {!user && (
+        <Link to={ROUTES.LOGIN} className="landing-cta">
+          Get Started — Log In
+        </Link>
+      )}
     </div>
   )
 }

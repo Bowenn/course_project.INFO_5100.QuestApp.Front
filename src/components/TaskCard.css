@@ -31,24 +31,37 @@
   text-transform: uppercase;
 }
 
-.task-status-open {
+.task-status-published {
   background: #e6fffa;
   color: #0d9488;
 }
 
-.task-status-picked {
+.task-status-assigned,
+.task-status-in_progress {
   background: #fef3c7;
   color: #b45309;
 }
 
-.task-status-done {
+.task-status-completed {
   background: #d1fae5;
   color: #047857;
 }
 
-.task-status-cancelled {
+.task-status-draft {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.task-status-cancelled,
+.task-status-declined {
   background: #fee2e2;
   color: #b91c1c;
+}
+
+.task-owner {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  color: #888;
 }
 
 .task-card-actions {
@@ -75,6 +88,16 @@
   background: #2d2d44;
 }
 
+.task-btn-secondary {
+  background: #fff;
+  color: #1a1a2e;
+  border: 1px solid #1a1a2e;
+}
+
+.task-btn-secondary:hover {
+  background: #f1f5f9;
+}
+
 .task-btn-success {
   background: #047857;
   color: #fff;
@@ -82,4 +105,13 @@
 
 .task-btn-success:hover {
   background: #059669;
+}
+
+.task-btn-danger {
+  background: #b91c1c;
+  color: #fff;
+}
+
+.task-btn-danger:hover {
+  background: #dc2626;
 }
