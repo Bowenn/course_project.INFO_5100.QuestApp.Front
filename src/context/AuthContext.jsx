@@ -21,6 +21,15 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false))
   }, [])
 
+  // Listen for token expiration events
+  useEffect(() => {
+    const handleTokenExpired = () => {
+      setUser(null)
+    }
+    window.addEventListener('token-expired', handleTokenExpired)
+    return () => window.removeEventListener('token-expired', handleTokenExpired)
+  }, [])
+
   const login = useCallback(async (email, password) => {
     const res = await authAPI.login(email, password)
     localStorage.setItem('token', res.data.token)
@@ -37,7 +46,9 @@ export function AuthProvider({ children }) {
 
   // Call after a successful profile update to store the new token and user
   const updateUser = useCallback((newToken, newUserData) => {
-    localStorage.setItem('token', newToken)
+    if (newToken) {
+      localStorage.setItem('token', newToken)
+    }
     setUser(newUserData)
   }, [])
 

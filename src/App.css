@@ -1,12 +1,1 @@
-/* App-level and shared page styles */
-.task-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
-}
-
-.empty-state {
-  color: #888;
-  padding: 2rem;
-  text-align: center;
-}
+/* Shared styles — component-level CSS takes precedence */

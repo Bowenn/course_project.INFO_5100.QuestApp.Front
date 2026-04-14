@@ -24,7 +24,7 @@ export function RegisterPage() {
     }
     setSubmitting(true)
     try {
-      await authAPI.register(formData.username, formData.email, formData.password)
+      await authAPI.register(formData.username, formData.email, formData.password, 'GIVER')
       // Auto-login after registration
       await login(formData.email, formData.password)
       navigate(ROUTES.DASHBOARD, { replace: true })

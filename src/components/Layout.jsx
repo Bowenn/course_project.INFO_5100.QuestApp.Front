@@ -21,9 +21,7 @@ export function Layout() {
             )}
             {!user && <NavLink to={ROUTES.LOGIN}>Login</NavLink>}
             {user && (
-              <span className="layout-user">
-                {user.username} ({user.role})
-              </span>
+              <span className="layout-user">{user.username}</span>
             )}
             {user && (
               <button type="button" onClick={logout} className="layout-logout">

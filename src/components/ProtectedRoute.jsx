@@ -1,10 +1,12 @@
-import { Navigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { ROUTES } from '../constants/routes'
 
 export function ProtectedRoute({ children, requiredRole }) {
-  const { isAuthenticated, hasRole, loading } = useAuth()
+  const { isAuthenticated, hasRole, loading, user } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
 
   if (loading) return null
 
